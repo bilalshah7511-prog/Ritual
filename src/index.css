@@ -421,6 +421,10 @@ body {
 
 .checkout-row__total-price,
 .cart-drawer__checkout-panel .checkout-row__total-price,
+.cart-item__price,
+.pdp-sheet__aa-value,
+.option-card__price,
+.total-sheet__value,
 .total-sheet__value.is-free,
 .total-sheet__row--muted .total-sheet__value.is-free {
   color: #111111 !important;
