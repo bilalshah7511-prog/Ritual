@@ -159,17 +159,18 @@ body {
   box-sizing: border-box;
 }
 
-/* Hide old CSS triangle caret (can clip/ghost on iOS) */
+/* Hide old CSS triangle caret on wrap */
 .size-select__wrap::after {
   display: none !important;
   content: none !important;
 }
 
+/* Outer pill — padding lives on inner .size-select__value (Chrome iOS ignores button padding) */
 .size-select__input {
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
   width: auto !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -186,8 +187,7 @@ body {
   cursor: pointer;
   font-size: 14px !important;
   line-height: 1.25 !important;
-  /* Extra left inset — iOS Safari often collapses button padding */
-  padding: 10px 14px 10px 18px !important;
+  padding: 0 !important;
   box-sizing: border-box !important;
   -webkit-appearance: none !important;
   appearance: none !important;
@@ -195,16 +195,18 @@ body {
   transform: none !important;
 }
 
+/* Mini inner box — left/right padding here */
 .size-select__value {
-  display: block;
+  display: block !important;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0 !important;
+  padding: 12px 10px 12px 22px !important;
   margin: 0 !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.25;
+  box-sizing: border-box;
 }
 
 .size-select__input::after {
@@ -212,7 +214,7 @@ body {
   flex: 0 0 auto;
   width: 8px;
   height: 8px;
-  margin: 0 2px 0 4px;
+  margin: 0 18px 0 4px !important;
   border-right: 2px solid var(--ri-navy, #142b6f);
   border-bottom: 2px solid var(--ri-navy, #142b6f);
   transform: translateY(-1px) rotate(45deg);
@@ -227,7 +229,7 @@ body {
   display: none !important;
 }
 
-/* iPhone SE (375) / iPhone 12 (390) */
+/* iPhone SE (375) / iPhone 12 (390) — Chrome + Safari */
 @media (max-width: 430px) {
   .size-select {
     width: 100%;
@@ -245,8 +247,16 @@ body {
     width: 100% !important;
     max-width: 100% !important;
     font-size: 13px !important;
-    padding: 12px 16px 12px 20px !important;
+    padding: 0 !important;
     min-height: 46px !important;
+  }
+
+  .size-select__value {
+    padding: 13px 12px 13px 24px !important;
+  }
+
+  .size-select__input::after {
+    margin: 0 20px 0 6px !important;
   }
 
   .size-select__label {
@@ -263,7 +273,14 @@ body {
 @media (max-width: 375px) {
   .size-select__input {
     font-size: 12px !important;
-    padding: 11px 14px 11px 18px !important;
+  }
+
+  .size-select__value {
+    padding: 12px 10px 12px 22px !important;
+  }
+
+  .size-select__input::after {
+    margin: 0 18px 0 4px !important;
   }
 }
 
@@ -1161,16 +1178,13 @@ html.safari-typing .checkout-flow--vv-lock {
   }
 }
 
-/* === Size select: final mobile/iOS overrides (must stay last) === */
+/* === Size select: final mobile overrides — padding on INNER box === */
 button.size-select__input {
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
-  padding-left: 20px !important;
-  padding-right: 16px !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  padding: 0 !important;
   box-sizing: border-box !important;
   -webkit-appearance: none !important;
   appearance: none !important;
@@ -1179,8 +1193,17 @@ button.size-select__input {
 
 button.size-select__input .size-select__value {
   display: block !important;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  padding-left: 22px !important;
+  padding-right: 10px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+button.size-select__input::after {
+  margin-right: 18px !important;
+  margin-left: 4px !important;
 }
 
 .size-select__wrap::after {
@@ -1192,17 +1215,36 @@ button.size-select__input .size-select__value {
   .size-select__wrap {
     width: 100% !important;
   }
+
   button.size-select__input {
     width: 100% !important;
     font-size: 13px !important;
-    padding-left: 20px !important;
-    padding-right: 16px !important;
+    padding: 0 !important;
+  }
+
+  button.size-select__input .size-select__value {
+    padding-left: 24px !important;
+    padding-right: 12px !important;
+    padding-top: 13px !important;
+    padding-bottom: 13px !important;
+  }
+
+  button.size-select__input::after {
+    margin-right: 20px !important;
   }
 }
 
 @media (max-width: 375px) {
   button.size-select__input {
     font-size: 12px !important;
-    padding-left: 18px !important;
+  }
+
+  button.size-select__input .size-select__value {
+    padding-left: 22px !important;
+    padding-right: 10px !important;
+  }
+
+  button.size-select__input::after {
+    margin-right: 18px !important;
   }
 }
