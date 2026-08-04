@@ -85,6 +85,9 @@ export function useSafariDrawerLock(drawerRef, active) {
   }, [drawerRef, active]);
 }
 
+/** Sheets that need Safari keyboard/viewport lock (NOT pdp / delivery / total). */
+const VV_LOCK_SHEETS = new Set(['verify', 'payment', 'shipping']);
+
 /** Login/payment sheets: rise fully; freeze while typing so UI doesn't jump/zoom. */
 export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
   useEffect(() => {
@@ -101,7 +104,8 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     }
 
     function lockSheet() {
-      if (!sheet || !flow || !isCompactViewport()) {
+      // PDP / delivery / total must keep normal drawer sheet behavior on mobile
+      if (!sheet || !flow || !isCompactViewport() || !VV_LOCK_SHEETS.has(sheet)) {
         clearSheetLock();
         return;
       }
