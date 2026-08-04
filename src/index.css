@@ -932,7 +932,7 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
   visibility: visible !important;
 }
 
-/* Safari iOS: inputs <16px auto-zoom on focus — breaks payment UI vs Pixel */
+/* Safari iOS: inputs <16px auto-zoom on focus - breaks payment UI vs Pixel */
 @media (max-width: 1024px) {
   .checkout-flow--payment .checkout-input,
   .checkout-flow--shipping .checkout-input,
@@ -1057,7 +1057,5 @@ html.safari-typing .checkout-flow--vv-lock {
 
   .header-left .header-icon.search-toggle {
     display: none !important;
-  }
-}
   }
 }
