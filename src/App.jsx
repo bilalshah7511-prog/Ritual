@@ -558,15 +558,17 @@ export default function App() {
 
                   <button
                     type="button"
-                    className="cart-control cart-control--chip"
+                    className="cart-control cart-control--chip cart-control--color"
                     onClick={openPdpSheet}
+                    aria-label={`Color ${selectedColor.label}`}
+                    title={selectedColor.label}
                   >
                     <span
                       className="cart-control__swatch"
                       style={{ background: selectedColor.hex }}
                       aria-hidden="true"
                     />
-                    {selectedColor.label}
+                    <span className="cart-control__label">{selectedColor.label}</span>
                     <span className="cart-control__chevron" aria-hidden="true">▾</span>
                   </button>
 
@@ -587,63 +589,66 @@ export default function App() {
         </div>
 
         <div className="cart-drawer__footer">
-          {[
-            { key: 'shipping', title: 'Shipping', status: shippingStatus },
-            { key: 'delivery', title: 'Delivery', status: deliveryStatus },
-            { key: 'payment', title: 'Payment', status: paymentStatus },
-          ].map((row) => (
-            <div
-              key={row.key}
-              className={`checkout-row${completion[row.key] ? ' is-complete' : ''}${row.key === 'payment' && completion.payment ? ' checkout-row--payment' : ''}`}
-              onClick={() => openSheet(row.key)}
-            >
-              <div className="checkout-row__main">
-                <p className="checkout-row__title">{row.title}</p>
-                <p
-                  className={`checkout-row__status${row.key === 'payment' ? ' checkout-row__status--payment' : ''}`}
-                >
-                  {row.key === 'payment' && completion.payment && (
-                    <CardBrandLogo
-                      brand={savedCardBrand || detectCardBrand(cardNumber) || 'card'}
-                      className="card-brand-logo--inline"
-                    />
-                  )}
-                  <span className="checkout-row__status-text">{row.status}</span>
-                </p>
+          <div className="cart-drawer__footer-steps">
+            {[
+              { key: 'shipping', title: 'Shipping', status: shippingStatus },
+              { key: 'delivery', title: 'Delivery', status: deliveryStatus },
+              { key: 'payment', title: 'Payment', status: paymentStatus },
+            ].map((row) => (
+              <div
+                key={row.key}
+                className={`checkout-row${completion[row.key] ? ' is-complete' : ''}${row.key === 'payment' && completion.payment ? ' checkout-row--payment' : ''}`}
+                onClick={() => openSheet(row.key)}
+              >
+                <div className="checkout-row__main">
+                  <p className="checkout-row__title">{row.title}</p>
+                  <p
+                    className={`checkout-row__status${row.key === 'payment' ? ' checkout-row__status--payment' : ''}`}
+                  >
+                    {row.key === 'payment' && completion.payment && (
+                      <CardBrandLogo
+                        brand={savedCardBrand || detectCardBrand(cardNumber) || 'card'}
+                        className="card-brand-logo--inline"
+                      />
+                    )}
+                    <span className="checkout-row__status-text">{row.status}</span>
+                  </p>
+                </div>
+                <span className="checkout-row__chevron" aria-hidden="true">
+                  <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
+                    <path d="M2 2l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
               </div>
-              <span className="checkout-row__chevron" aria-hidden="true">
-                <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
-                  <path d="M2 2l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </div>
-          ))}
-
-          <div className="cart-drawer__checkout-panel">
-            <button
-              type="button"
-              className="checkout-row checkout-row--total"
-              onClick={() => openSheet('total')}
-            >
-              <p className="checkout-row__title">Est Total</p>
-              <span className="checkout-row__total-price">
-                ${inCart ? estimatedTotal.toFixed(2) : '0.00'}
-              </span>
-              <span className="checkout-row__chevron" aria-hidden="true">
-                <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
-                  <path d="M2 2l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </button>
-            <button
-              type="button"
-              className="cart-drawer__checkout"
-              disabled={!checkoutReady || !inCart}
-              onClick={finalCheckout}
-            >
-              CHECKOUT
-            </button>
+            ))}
           </div>
+        </div>
+
+        {/* Pinned outside footer so iPad/tablet never clips the CTA */}
+        <div className="cart-drawer__checkout-panel">
+          <button
+            type="button"
+            className="checkout-row checkout-row--total"
+            onClick={() => openSheet('total')}
+          >
+            <p className="checkout-row__title">Est Total</p>
+            <span className="checkout-row__total-price">
+              ${inCart ? estimatedTotal.toFixed(2) : '0.00'}
+            </span>
+            <span className="checkout-row__chevron" aria-hidden="true">
+              <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
+                <path d="M2 2l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </button>
+          <button
+            type="button"
+            className="cart-drawer__checkout"
+            disabled={!checkoutReady || !inCart}
+            onClick={finalCheckout}
+          >
+            CHECKOUT
+          </button>
         </div>
 
         <div
@@ -879,34 +884,36 @@ export default function App() {
           </div>
 
           {/* Verify */}
-          <div className={`checkout-sheet${sheet === 'verify' ? ' is-active' : ''}`}>
-            <div className="checkout-sheet__brand-wrap">
-              <img src={brand.logoSrc} alt={brand.name} className="checkout-sheet__brand-logo" />
+          <div className={`checkout-sheet checkout-sheet--pinned${sheet === 'verify' ? ' is-active' : ''}`}>
+            <div className="checkout-sheet__scroll">
+              <div className="checkout-sheet__brand-wrap">
+                <img src={brand.logoSrc} alt={brand.name} className="checkout-sheet__brand-logo" />
+              </div>
+              <div className="verify-tabs">
+                <button
+                  type="button"
+                  className={`verify-tab${verifyMode === 'guest' ? ' is-active' : ''}`}
+                  onClick={() => setVerifyMode('guest')}
+                >
+                  Guest
+                </button>
+                <button
+                  type="button"
+                  className={`verify-tab${verifyMode === 'member' ? ' is-active' : ''}`}
+                  onClick={() => setVerifyMode('member')}
+                >
+                  Member
+                </button>
+              </div>
+              <label className="checkout-label">Email Address</label>
+              <input
+                type="email"
+                className="checkout-input"
+                placeholder="info@mail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-            <div className="verify-tabs">
-              <button
-                type="button"
-                className={`verify-tab${verifyMode === 'guest' ? ' is-active' : ''}`}
-                onClick={() => setVerifyMode('guest')}
-              >
-                Guest
-              </button>
-              <button
-                type="button"
-                className={`verify-tab${verifyMode === 'member' ? ' is-active' : ''}`}
-                onClick={() => setVerifyMode('member')}
-              >
-                Member
-              </button>
-            </div>
-            <label className="checkout-label">Email Address</label>
-            <input
-              type="email"
-              className="checkout-input"
-              placeholder="info@mail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
             {verifyMode === 'guest' ? (
               <button type="button" className="checkout-cta" onClick={verifyContinue}>
                 Continue as Guest
@@ -919,7 +926,7 @@ export default function App() {
           </div>
 
           {/* Shipping */}
-          <div className={`checkout-sheet${sheet === 'shipping' ? ' is-active' : ''}`}>
+          <div className={`checkout-sheet checkout-sheet--pinned${sheet === 'shipping' ? ' is-active' : ''}`}>
             <div className="checkout-sheet__top">
               <div>
                 <h3 className="checkout-sheet__title">Shipping Options</h3>
@@ -929,24 +936,26 @@ export default function App() {
                 &times;
               </button>
             </div>
-            <div className="option-card-list">
-              {shippingOptions.map((opt) => (
-                <label className="option-card" key={opt.value}>
-                  <input
-                    type="radio"
-                    name="shipping-option"
-                    value={opt.value}
-                    checked={shippingValue === opt.value}
-                    onChange={() => setShippingValue(opt.value)}
-                  />
-                  <span className="option-card__radio" />
-                  <span className="option-card__info">
-                    <span className="option-card__title">{opt.title}</span>
-                    <span className="option-card__subtitle">{opt.subtitle}</span>
-                  </span>
-                  <span className="option-card__price">{opt.price}</span>
-                </label>
-              ))}
+            <div className="checkout-sheet__scroll">
+              <div className="option-card-list">
+                {shippingOptions.map((opt) => (
+                  <label className="option-card" key={opt.value}>
+                    <input
+                      type="radio"
+                      name="shipping-option"
+                      value={opt.value}
+                      checked={shippingValue === opt.value}
+                      onChange={() => setShippingValue(opt.value)}
+                    />
+                    <span className="option-card__radio" />
+                    <span className="option-card__info">
+                      <span className="option-card__title">{opt.title}</span>
+                      <span className="option-card__subtitle">{opt.subtitle}</span>
+                    </span>
+                    <span className="option-card__price">{opt.price}</span>
+                  </label>
+                ))}
+              </div>
             </div>
             <button
               type="button"
@@ -1106,7 +1115,7 @@ export default function App() {
           </div>
 
           {/* Payment */}
-          <div className={`checkout-sheet${sheet === 'payment' ? ' is-active' : ''}`}>
+          <div className={`checkout-sheet checkout-sheet--pinned${sheet === 'payment' ? ' is-active' : ''}`}>
             <div className="checkout-sheet__top">
               <div>
                 <h3 className="checkout-sheet__title">Payment</h3>
@@ -1116,58 +1125,60 @@ export default function App() {
                 &times;
               </button>
             </div>
-            <label className="checkout-label">Card number</label>
-            <div className="checkout-input-wrap">
-              <input
-                type="text"
-                className="checkout-input checkout-input--card"
-                placeholder="1234 5678 9012 3456"
-                value={cardNumber}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/\D/g, '').slice(0, 19);
-                  const grouped = digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
-                  setCardNumber(grouped);
-                }}
-                inputMode="numeric"
-                autoComplete="cc-number"
-              />
-              <CardBrandLogo brand={cardBrand} className="card-brand-logo--field" />
-            </div>
-            <label className="checkout-label">Cardholder name</label>
-            <input
-              type="text"
-              className="checkout-input"
-              placeholder="John Doe"
-              value={cardName}
-              onChange={(e) => setCardName(e.target.value)}
-            />
-            <div className="checkout-input-row">
-              <div>
-                <label className="checkout-label">Expiry</label>
+            <div className="checkout-sheet__scroll">
+              <label className="checkout-label">Card number</label>
+              <div className="checkout-input-wrap">
                 <input
                   type="text"
-                  className="checkout-input"
-                  placeholder="MM/YY"
-                  value={cardExpiry}
+                  className="checkout-input checkout-input--card"
+                  placeholder="1234 5678 9012 3456"
+                  value={cardNumber}
                   onChange={(e) => {
-                    const d = e.target.value.replace(/\D/g, '').slice(0, 4);
-                    setCardExpiry(d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d);
+                    const digits = e.target.value.replace(/\D/g, '').slice(0, 19);
+                    const grouped = digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+                    setCardNumber(grouped);
                   }}
                   inputMode="numeric"
-                  autoComplete="cc-exp"
+                  autoComplete="cc-number"
                 />
+                <CardBrandLogo brand={cardBrand} className="card-brand-logo--field" />
               </div>
-              <div>
-                <label className="checkout-label">CVV</label>
-                <input
-                  type="text"
-                  className="checkout-input"
-                  placeholder="123"
-                  value={cardCvv}
-                  onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                  inputMode="numeric"
-                  autoComplete="cc-csc"
-                />
+              <label className="checkout-label">Cardholder name</label>
+              <input
+                type="text"
+                className="checkout-input"
+                placeholder="John Doe"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value)}
+              />
+              <div className="checkout-input-row">
+                <div>
+                  <label className="checkout-label">Expiry</label>
+                  <input
+                    type="text"
+                    className="checkout-input"
+                    placeholder="MM/YY"
+                    value={cardExpiry}
+                    onChange={(e) => {
+                      const d = e.target.value.replace(/\D/g, '').slice(0, 4);
+                      setCardExpiry(d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d);
+                    }}
+                    inputMode="numeric"
+                    autoComplete="cc-exp"
+                  />
+                </div>
+                <div>
+                  <label className="checkout-label">CVV</label>
+                  <input
+                    type="text"
+                    className="checkout-input"
+                    placeholder="123"
+                    value={cardCvv}
+                    onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    inputMode="numeric"
+                    autoComplete="cc-csc"
+                  />
+                </div>
               </div>
             </div>
             <button type="button" className="checkout-cta" onClick={savePayment}>
