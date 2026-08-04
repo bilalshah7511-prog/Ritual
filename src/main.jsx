@@ -26,5 +26,7 @@ window.addEventListener('resize', syncVisualViewport)
 window.addEventListener('orientationchange', syncVisualViewport)
 window.visualViewport?.addEventListener('resize', syncVisualViewport)
 window.visualViewport?.addEventListener('scroll', syncVisualViewport)
+window.addEventListener('pageshow', syncVisualViewport)
+requestAnimationFrame(syncVisualViewport)
 
 createRoot(document.getElementById('root')).render(<App />)
