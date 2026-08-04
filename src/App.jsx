@@ -396,7 +396,6 @@ export default function App() {
               aria-label="Menu"
               onClick={() => setMenuOpen((v) => !v)}
             >
-              <span className="hamburger__label">Menu</span>
               <svg className="hamburger__icon hamburger__icon--open" width="22" height="16" viewBox="0 0 22 16" fill="none">
                 <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" strokeWidth="1.5" />
                 <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" strokeWidth="1.5" />

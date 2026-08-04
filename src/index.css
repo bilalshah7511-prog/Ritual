@@ -164,6 +164,17 @@ body {
   width: 100%;
   text-align: left;
   cursor: pointer;
+  font-size: 14px !important;
+  line-height: 1.3 !important;
+  padding: 10px 40px 10px 16px !important;
+}
+
+.size-select__option {
+  font-size: 14px !important;
+}
+
+.hamburger__label {
+  display: none !important;
 }
 
 .size-select__input:hover,
