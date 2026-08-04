@@ -622,17 +622,8 @@ ul, ol {
 }
 
 .size-select__wrap::after {
-  content: "";
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid #111111;
-  border-bottom: 2px solid #111111;
-  transform: translateY(-70%) rotate(45deg);
-  pointer-events: none;
-  z-index: 1;
+  content: none;
+  display: none;
 }
 
 .size-select__input {
@@ -642,7 +633,7 @@ ul, ol {
   background: #fff;
   border: 1.5px solid #111111;
   border-radius: 999px;
-  padding: 12px 44px 12px 18px;
+  padding: 12px 18px 12px 18px;
   font-family: 'Recoleta', Georgia, serif;
   font-weight: 400;
   font-size: 14px;
@@ -651,6 +642,15 @@ ul, ol {
   cursor: pointer;
   outline: none;
   text-align: left;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.size-select__input:active {
+  transform: none;
 }
 
 .size-select__input:hover,
@@ -1011,13 +1011,7 @@ ul, ol {
   .size-select__input {
     font-size: 14px;
     box-sizing: border-box;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .size-select__wrap::after {
-    right: 16px;
+    width: 100%;
   }
 
   .add-to-cart-btn {

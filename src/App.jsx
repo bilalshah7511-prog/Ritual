@@ -1261,7 +1261,7 @@ export default function App() {
                 aria-labelledby="sizeSelectLabel"
                 onClick={() => setSizeMenuOpen((o) => !o)}
               >
-                {selectedSize.label}
+                <span className="size-select__value">{selectedSize.label}</span>
               </button>
               {sizeMenuOpen && (
                 <ul className="size-select__menu" role="listbox" aria-labelledby="sizeSelectLabel">
