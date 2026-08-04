@@ -10,6 +10,10 @@ import {
   readVisualViewport,
 } from './safariViewport';
 
+function setTypingClass(on) {
+  document.documentElement.classList.toggle('safari-typing', Boolean(on));
+}
+
 /** Cart drawer: match visible viewport; freeze while typing (Safari keyboard). */
 export function useSafariDrawerLock(drawerRef, active) {
   useEffect(() => {
@@ -17,10 +21,12 @@ export function useSafariDrawerLock(drawerRef, active) {
     if (!drawer) return undefined;
 
     let frozen = null;
+    let lastIdleSnap = null;
 
     function clearLock() {
       clearDrawerViewportLock(drawer);
       frozen = null;
+      setTypingClass(false);
     }
 
     function lockToVisualViewport() {
@@ -29,19 +35,28 @@ export function useSafariDrawerLock(drawerRef, active) {
         return;
       }
 
-      if (isTypingInside(drawer) && frozen) {
+      const typing = isTypingInside(drawer);
+      setTypingClass(typing);
+
+      if (typing && frozen) {
         applyDrawerViewportLock(drawer, frozen);
         return;
       }
 
       const snap = readVisualViewport();
-      if (isTypingInside(drawer)) {
-        if (!frozen) frozen = { top: snap.top, height: snap.height };
+      if (typing) {
+        // Keep pre-keyboard drawer size (Pixel-like) — don't shrink with keyboard
+        if (!frozen) {
+          frozen = lastIdleSnap
+            ? { top: lastIdleSnap.top, height: lastIdleSnap.height }
+            : { top: snap.top, height: snap.height };
+        }
         applyDrawerViewportLock(drawer, frozen);
         return;
       }
 
       frozen = null;
+      lastIdleSnap = snap;
       applyDrawerViewportLock(drawer, snap);
       publishViewportCssVars(snap);
     }
@@ -70,17 +85,19 @@ export function useSafariDrawerLock(drawerRef, active) {
   }, [drawerRef, active]);
 }
 
-/** Login/payment sheets: rise fully; freeze while typing so UI doesn't jump. */
+/** Login/payment sheets: rise fully; freeze while typing so UI doesn't jump/zoom. */
 export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
   useEffect(() => {
     const flow = flowRef.current;
     const backdrop = backdropRef.current;
     const drawer = drawerRef.current;
     let frozen = null;
+    let lastIdleSnap = null;
 
     function clearSheetLock() {
       clearSheetViewportLock(flow, backdrop, drawer);
       frozen = null;
+      setTypingClass(false);
     }
 
     function lockSheet() {
@@ -89,21 +106,36 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
         return;
       }
 
-      if (isTypingInside(flow) && frozen) {
+      const typing = isTypingInside(flow);
+      setTypingClass(typing);
+
+      if (typing && frozen) {
         applySheetViewportLock(flow, backdrop, drawer, frozen);
         return;
       }
 
       const snap = readVisualViewport();
-      if (isTypingInside(flow)) {
-        if (!frozen) frozen = snap;
+      if (typing) {
+        // Freeze to last idle snap so keyboard/zoom doesn't reshuffle payment UI
+        if (!frozen) frozen = lastIdleSnap || snap;
         applySheetViewportLock(flow, backdrop, drawer, frozen);
+        // Undo Safari's focus scroll offset that shifts the whole page
+        if (window.scrollY || window.scrollX) {
+          window.scrollTo(0, 0);
+        }
         return;
       }
 
       frozen = null;
+      lastIdleSnap = snap;
       applySheetViewportLock(flow, backdrop, drawer, snap);
       publishViewportCssVars(snap);
+    }
+
+    function onFocusIn() {
+      // Capture idle geometry before the keyboard animates
+      if (!frozen && lastIdleSnap) frozen = lastIdleSnap;
+      lockSheet();
     }
 
     function onFocusOut() {
@@ -115,7 +147,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     window.addEventListener('orientationchange', lockSheet);
     window.visualViewport?.addEventListener('resize', lockSheet);
     window.visualViewport?.addEventListener('scroll', lockSheet);
-    flow?.addEventListener('focusin', lockSheet);
+    flow?.addEventListener('focusin', onFocusIn);
     flow?.addEventListener('focusout', onFocusOut);
 
     return () => {
@@ -124,7 +156,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       window.removeEventListener('orientationchange', lockSheet);
       window.visualViewport?.removeEventListener('resize', lockSheet);
       window.visualViewport?.removeEventListener('scroll', lockSheet);
-      flow?.removeEventListener('focusin', lockSheet);
+      flow?.removeEventListener('focusin', onFocusIn);
       flow?.removeEventListener('focusout', onFocusOut);
     };
   }, [flowRef, backdropRef, drawerRef, sheet]);

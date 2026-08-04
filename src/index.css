@@ -932,6 +932,27 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
   visibility: visible !important;
 }
 
+/* Safari iOS: inputs <16px auto-zoom on focus — breaks payment UI vs Pixel */
+@media (max-width: 1024px) {
+  .checkout-flow--payment .checkout-input,
+  .checkout-flow--shipping .checkout-input,
+  .checkout-flow--verify .checkout-input,
+  .checkout-flow--delivery .checkout-input,
+  .checkout-flow .checkout-input,
+  .checkout-flow select.checkout-input {
+    font-size: 16px !important;
+  }
+}
+
+html.safari-typing,
+html.safari-typing body {
+  overscroll-behavior: none;
+}
+
+html.safari-typing .checkout-flow--vv-lock {
+  transition: none !important;
+}
+
 @media (max-width: 1024px) {
   .cart-drawer--vv-lock {
     box-sizing: border-box !important;
