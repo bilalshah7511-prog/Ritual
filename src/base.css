@@ -617,6 +617,8 @@ ul, ol {
 .size-select__wrap {
   position: relative;
   width: 56%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .size-select__wrap::after {
@@ -630,6 +632,7 @@ ul, ol {
   border-bottom: 2px solid #111111;
   transform: translateY(-70%) rotate(45deg);
   pointer-events: none;
+  z-index: 1;
 }
 
 .size-select__input {
@@ -1000,8 +1003,21 @@ ul, ol {
     font-size: 18px;
   }
 
+  .size-select__wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .size-select__input {
     font-size: 14px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .size-select__wrap::after {
+    right: 16px;
   }
 
   .add-to-cart-btn {

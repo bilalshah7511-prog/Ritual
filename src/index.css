@@ -153,6 +153,8 @@ body {
 .size-select__wrap {
   position: relative;
   width: 56%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .size-select__input {
@@ -162,11 +164,18 @@ body {
   background: #fff !important;
   color: var(--ri-ink) !important;
   width: 100%;
+  max-width: 100%;
   text-align: left;
   cursor: pointer;
   font-size: 14px !important;
   line-height: 1.3 !important;
   padding: 10px 40px 10px 16px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .size-select__option {
@@ -175,6 +184,53 @@ body {
 
 .hamburger__label {
   display: none !important;
+}
+
+/* iPhone SE / 12 and other small phones */
+@media (max-width: 430px) {
+  .size-select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .size-select__wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .size-select__wrap::after {
+    right: 16px !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .size-select__input {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    padding: 11px 38px 11px 14px !important;
+    min-height: 44px;
+  }
+
+  .size-select__label {
+    font-size: 16px !important;
+    line-height: 1.3 !important;
+  }
+
+  .size-select__option {
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .size-select__input {
+    font-size: 12px !important;
+    padding: 10px 34px 10px 12px !important;
+  }
+
+  .size-select__wrap::after {
+    right: 14px !important;
+  }
 }
 
 .size-select__input:hover,
