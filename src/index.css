@@ -1342,3 +1342,17 @@ body {
     max-height: var(--vv-height, 100svh) !important;
   }
 }
+/* Payment Save CTA: no jump / missed tap when keyboard closes (iOS) */
+.checkout-flow--payment .checkout-cta,
+.checkout-flow--shipping .checkout-cta,
+.checkout-flow--verify .checkout-cta {
+  touch-action: manipulation !important;
+  transform: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.checkout-flow--payment .checkout-cta:active,
+.checkout-flow--shipping .checkout-cta:active,
+.checkout-flow--verify .checkout-cta:active {
+  transform: none !important;
+}

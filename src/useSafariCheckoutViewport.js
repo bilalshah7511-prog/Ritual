@@ -14,6 +14,10 @@ function setTypingClass(on) {
   document.documentElement.classList.toggle('safari-typing', Boolean(on));
 }
 
+function isCheckoutCta(el) {
+  return Boolean(el?.closest?.('.checkout-cta'));
+}
+
 /** Cart drawer: match visible viewport; freeze while typing (Safari keyboard). */
 export function useSafariDrawerLock(drawerRef, active) {
   useEffect(() => {
@@ -45,7 +49,6 @@ export function useSafariDrawerLock(drawerRef, active) {
 
       const snap = readVisualViewport();
       if (typing) {
-        // Keep pre-keyboard drawer size (Pixel-like) — don't shrink with keyboard
         if (!frozen) {
           frozen = lastIdleSnap
             ? { top: lastIdleSnap.top, height: lastIdleSnap.height }
@@ -96,6 +99,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     const drawer = drawerRef.current;
     let frozen = null;
     let lastIdleSnap = null;
+    let saveTapUntil = 0;
 
     function clearSheetLock() {
       clearSheetViewportLock(flow, backdrop, drawer);
@@ -103,10 +107,29 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       setTypingClass(false);
     }
 
+    function holdFreezeForSaveTap() {
+      // Keep frozen geometry while Save is pressed (keyboard dismiss must not grow sheet)
+      saveTapUntil = Date.now() + 600;
+      if (!frozen) frozen = lastIdleSnap || readVisualViewport();
+      if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen);
+    }
+
     function lockSheet() {
-      // PDP / delivery / total must keep normal drawer sheet behavior on mobile
       if (!sheet || !flow || !isCompactViewport() || !VV_LOCK_SHEETS.has(sheet)) {
         clearSheetLock();
+        return;
+      }
+
+      // After Save tap: keep frozen so sheet does not jump upward when keyboard closes
+      if (Date.now() < saveTapUntil && frozen) {
+        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        return;
+      }
+
+      const active = document.activeElement;
+      if (isCheckoutCta(active) && frozen) {
+        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        setTypingClass(false);
         return;
       }
 
@@ -120,10 +143,8 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
       const snap = readVisualViewport();
       if (typing) {
-        // Freeze to last idle snap so keyboard/zoom doesn't reshuffle payment UI
         if (!frozen) frozen = lastIdleSnap || snap;
         applySheetViewportLock(flow, backdrop, drawer, frozen);
-        // Undo Safari's focus scroll offset that shifts the whole page
         if (window.scrollY || window.scrollX) {
           window.scrollTo(0, 0);
         }
@@ -137,13 +158,23 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     }
 
     function onFocusIn() {
-      // Capture idle geometry before the keyboard animates
       if (!frozen && lastIdleSnap) frozen = lastIdleSnap;
       lockSheet();
     }
 
-    function onFocusOut() {
-      window.setTimeout(lockSheet, 180);
+    function onFocusOut(e) {
+      const next = e.relatedTarget;
+      if (isCheckoutCta(next) || (next && flow?.contains(next))) {
+        if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen);
+        return;
+      }
+      window.setTimeout(lockSheet, 220);
+    }
+
+    function onPointerDownCapture(e) {
+      if (isCheckoutCta(e.target)) {
+        holdFreezeForSaveTap();
+      }
     }
 
     lockSheet();
@@ -153,6 +184,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     window.visualViewport?.addEventListener('scroll', lockSheet);
     flow?.addEventListener('focusin', onFocusIn);
     flow?.addEventListener('focusout', onFocusOut);
+    flow?.addEventListener('pointerdown', onPointerDownCapture, true);
 
     return () => {
       clearSheetLock();
@@ -162,6 +194,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       window.visualViewport?.removeEventListener('scroll', lockSheet);
       flow?.removeEventListener('focusin', onFocusIn);
       flow?.removeEventListener('focusout', onFocusOut);
+      flow?.removeEventListener('pointerdown', onPointerDownCapture, true);
     };
   }, [flowRef, backdropRef, drawerRef, sheet]);
 }

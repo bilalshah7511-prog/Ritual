@@ -306,6 +306,7 @@ export default function App() {
 
   function savePayment(e) {
     e?.preventDefault?.();
+    e?.stopPropagation?.();
     const digits = String(cardNumber || '').replace(/\D/g, '');
     const nameOk = String(cardName || '').trim().length > 0;
     const expiryOk = String(cardExpiry || '').replace(/\s/g, '').length >= 4;
@@ -1206,7 +1207,17 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <button type="button" className="checkout-cta" onClick={savePayment}>
+            <button
+              type="button"
+              className="checkout-cta"
+              onPointerDown={(e) => {
+                if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+                  e.preventDefault();
+                  savePayment(e);
+                }
+              }}
+              onClick={savePayment}
+            >
               Save Payment Method
             </button>
           </div>
