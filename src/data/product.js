@@ -53,7 +53,7 @@ export const product = {
     },
   ],
   sizes: [
-    { id: '1mo', label: '1 month supply', price: 33.0 },
+    { id: '1mo', label: '1 month', price: 33.0 },
     { id: 'sub', label: 'Subscribe · $26.40/mo', price: 26.4 },
   ],
   frequencies: [],
