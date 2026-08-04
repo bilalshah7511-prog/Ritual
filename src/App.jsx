@@ -389,22 +389,25 @@ export default function App() {
 
       <header className="site-header">
         <div className="site-header__row">
-          <button
-            className={`hamburger${menuOpen ? ' is-active' : ''}`}
-            type="button"
-            aria-label="Menu"
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            <svg className="hamburger__icon hamburger__icon--open" width="22" height="16" viewBox="0 0 22 16" fill="none">
-              <line x1="0" y1="1" x2="22" y2="1" stroke="#111111" strokeWidth="1.5" />
-              <line x1="0" y1="8" x2="22" y2="8" stroke="#111111" strokeWidth="1.5" />
-              <line x1="0" y1="15" x2="22" y2="15" stroke="#111111" strokeWidth="1.5" />
-            </svg>
-            <svg className="hamburger__icon hamburger__icon--close" width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <line x1="1" y1="1" x2="17" y2="17" stroke="#111111" strokeWidth="1.6" />
-              <line x1="17" y1="1" x2="1" y2="17" stroke="#111111" strokeWidth="1.6" />
-            </svg>
-          </button>
+          <div className="header-left">
+            <button
+              className={`hamburger${menuOpen ? ' is-active' : ''}`}
+              type="button"
+              aria-label="Menu"
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              <span className="hamburger__label">Menu</span>
+              <svg className="hamburger__icon hamburger__icon--open" width="22" height="16" viewBox="0 0 22 16" fill="none">
+                <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+              <svg className="hamburger__icon hamburger__icon--close" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" strokeWidth="1.6" />
+                <line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" strokeWidth="1.6" />
+              </svg>
+            </button>
+          </div>
 
           <nav className="site-nav site-nav--left">
             <ul>
@@ -436,11 +439,25 @@ export default function App() {
           </nav>
 
           <div className="mobile-icons">
-            <button type="button" className="search-toggle mobile-icons__btn" onClick={() => setSearchOpen((v) => !v)}>
-              search
+            <button type="button" className="header-icon search-toggle" aria-label="Search" onClick={() => setSearchOpen((v) => !v)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <circle cx="10.5" cy="10.5" r="6.5" />
+                <path d="M15.5 15.5L21 21" strokeLinecap="round" />
+              </svg>
             </button>
-            <a href="#" className="mobile-icons__btn cart-link" onClick={openCart}>
-              cart({cartCount})
+            <a href="#" className="header-icon" aria-label="Account">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="9.25" />
+                <circle cx="12" cy="10" r="3.25" />
+                <path d="M6.5 18.2c1.4-2.2 3.3-3.2 5.5-3.2s4.1 1 5.5 3.2" strokeLinecap="round" />
+              </svg>
+            </a>
+            <a href="#" className="header-icon cart-link" onClick={openCart} aria-label={`Cart ${cartCount}`}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <path d="M6 8h12l-1 12H7L6 8z" strokeLinejoin="round" />
+                <path d="M9 8V6.5a3 3 0 0 1 6 0V8" strokeLinecap="round" />
+              </svg>
+              {cartCount > 0 && <span className="header-icon__badge">{cartCount}</span>}
             </a>
           </div>
         </div>

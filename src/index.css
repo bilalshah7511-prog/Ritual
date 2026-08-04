@@ -123,6 +123,11 @@ body {
   font-size: 11px;
 }
 
+/* Search bar = light tint of banner navy */
+.search-bar {
+  background-color: color-mix(in srgb, #142b6f 12%, #ffffff) !important;
+}
+
 .site-header {
   background: rgba(255, 255, 255, 0.96) !important;
   backdrop-filter: blur(8px);
@@ -930,5 +935,108 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
 @media (max-width: 1024px) {
   .cart-drawer--vv-lock {
     box-sizing: border-box !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE HEADER ICONS (=1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .site-header__row {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 12px 16px !important;
+  }
+
+  .header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    grid-column: 1;
+  }
+
+  .header-left .hamburger {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .site-nav--left,
+  .site-nav--right {
+    display: none !important;
+  }
+
+  .site-logo {
+    grid-column: 2 !important;
+    justify-self: center !important;
+  }
+
+  .mobile-icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    grid-column: 3 !important;
+  }
+
+  .header-icon {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: #111;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .header-icon svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+
+  .header-icon__badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .mobile-icons .mobile-icons__btn,
+  .mobile-icons .search-toggle:not(.header-icon) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .header-left {
+    display: contents;
+  }
+
+  .header-left .header-icon.search-toggle {
+    display: none !important;
+  }
+}
   }
 }
