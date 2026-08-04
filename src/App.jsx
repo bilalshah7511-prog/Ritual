@@ -11,6 +11,7 @@ import {
   timeSlots,
   usStates,
 } from './data/product';
+import { useSafariDrawerLock, useSafariSheetLock } from './useSafariCheckoutViewport';
 import './base.css';
 import './index.css';
 
@@ -81,6 +82,9 @@ export default function App() {
   const [promoError, setPromoError] = useState('');
   const dates = useMemo(() => buildDates(), []);
   const pdpTrackRef = useRef(null);
+  const cartDrawerRef = useRef(null);
+  const checkoutFlowRef = useRef(null);
+  const checkoutBackdropRef = useRef(null);
 
   const selectedSize = product.sizes.find((s) => s.id === sizeId) || product.sizes[0];
   const selectedColor = product.colors.find((c) => c.id === colorId) || product.colors[0];
@@ -160,6 +164,9 @@ export default function App() {
       document.body.style.overflow = '';
     };
   }, [cartOpen, menuOpen, checkoutLoading]);
+
+  useSafariDrawerLock(cartDrawerRef, cartOpen || checkoutLoading);
+  useSafariSheetLock(checkoutFlowRef, checkoutBackdropRef, cartDrawerRef, sheet);
 
   useEffect(() => {
     if (!selectedDate && dates[0]) setSelectedDate(dates[0]);
@@ -484,6 +491,7 @@ export default function App() {
         onClick={checkoutLoading ? undefined : closeCart}
       />
       <div
+        ref={cartDrawerRef}
         className={`cart-drawer${cartOpen ? ' is-open' : ''}${checkoutLoading ? ' is-checkout' : ''}${!cartOpen && checkoutLoading ? ' is-closing' : ''}`}
       >
         <CheckoutLoader
@@ -669,10 +677,11 @@ export default function App() {
         </div>
 
         <div
+          ref={checkoutBackdropRef}
           className={`checkout-flow-backdrop${sheet ? ' is-visible' : ''}`}
           onClick={closeSheet}
         />
-        <div className={`checkout-flow${sheet ? ' is-open' : ''}${sheet ? ` checkout-flow--${sheet}` : ''}`}>
+        <div ref={checkoutFlowRef} className={`checkout-flow${sheet ? ' is-open' : ''}${sheet ? ` checkout-flow--${sheet}` : ''}`}>
           <SheetFeedback
             type={sheetFeedback}
             onDone={() => setSheetFeedback(null)}

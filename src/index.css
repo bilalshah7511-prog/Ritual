@@ -898,13 +898,49 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
   }
 }
 
-/* ==========================================================================
-   MOBILE HEADER ICONS (≤1024px)
-   ========================================================================== */
-.hamburger__label {
-  display: none;
+/* Safari checkout: login/payment sheet lock + keyboard-safe */
+.checkout-flow--vv-lock {
+  background: #fff !important;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
+.checkout-flow--vv-lock .checkout-sheet--pinned.is-active,
+.checkout-flow--vv-lock .checkout-sheet.is-active {
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.checkout-flow--vv-lock .checkout-sheet--pinned .checkout-sheet__scroll {
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.checkout-flow--vv-lock .checkout-sheet--pinned .checkout-cta {
+  flex-shrink: 0 !important;
+  margin-top: 12px !important;
+  margin-bottom: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 1024px) {
+  .cart-drawer--vv-lock {
+    box-sizing: border-box !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE HEADER ICONS (=1024px)
+   ========================================================================== */
 @media (max-width: 1024px) {
   .site-header__row {
     display: grid !important;
@@ -931,25 +967,6 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
     margin: 0 !important;
     border: 0 !important;
     background: transparent !important;
-    color: var(--ri-navy);
-    cursor: pointer;
-  }
-
-  .hamburger__label {
-    display: inline !important;
-    font-family: var(--brand-font);
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--ri-navy);
-    line-height: 1;
-  }
-
-  .hamburger:not(.is-active) .hamburger__icon--open {
-    display: none !important;
-  }
-
-  .hamburger.is-active .hamburger__label {
-    display: none !important;
   }
 
   .site-nav--left,
@@ -976,7 +993,7 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
     justify-content: center;
     width: 28px;
     height: 28px;
-    color: var(--ri-navy);
+    color: #111;
     border: 0;
     background: transparent;
     padding: 0;
@@ -998,7 +1015,7 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
     height: 16px;
     padding: 0 4px;
     border-radius: 999px;
-    background: var(--ri-navy);
+    background: #111;
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -1017,7 +1034,9 @@ html:has(.cart-drawer.is-open)::-webkit-scrollbar {
     display: contents;
   }
 
-  .hamburger__label {
+  .header-left .header-icon.search-toggle {
     display: none !important;
+  }
+}
   }
 }
