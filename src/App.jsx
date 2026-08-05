@@ -672,7 +672,7 @@ export default function App() {
             disabled={!checkoutReady || !inCart}
             onClick={finalCheckout}
           >
-            CHECKOUT
+            Checkout
           </button>
         </div>
 
@@ -1321,7 +1321,7 @@ export default function App() {
           </div>
 
           <button type="button" className="add-to-cart-btn" onClick={addToCart}>
-            ${unitPrice.toFixed(2)} — Add to Bag
+            Add to Cart
           </button>
 
           <div className="product-tabs">

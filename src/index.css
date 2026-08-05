@@ -81,6 +81,11 @@ body {
   letter-spacing: 0.01em;
 }
 
+/* Cart drawer product title = banner navy */
+.cart-drawer .cart-item__title {
+  color: #142b6f !important;
+}
+
 .checkout-row__title,
 .checkout-sheet__title {
   font-family: var(--brand-display) !important;
@@ -478,6 +483,7 @@ body {
 .add-to-cart-btn,
 .cart-drawer__checkout {
   border-radius: 999px !important;
+  text-transform: none !important;
 }
 
 .checkout-input {
@@ -602,6 +608,10 @@ body {
   color: #ffffff !important;
   border: 2px solid #142b6f !important;
   border-radius: 999px !important;
+}
+
+.cart-drawer__checkout {
+  text-transform: none !important;
 }
 
 .cart-drawer__checkout:not(:disabled):hover,
