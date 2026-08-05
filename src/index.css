@@ -1366,3 +1366,102 @@ body {
 .checkout-flow--verify .checkout-cta:active {
   transform: none !important;
 }
+
+/* ===== Safari visualViewport parity (match Android) — append-only ===== */
+@media (max-width: 1024px) {
+  .cart-drawer {
+    top: var(--vv-top, 0px) !important;
+    bottom: auto !important;
+    height: var(--vv-height, 100svh) !important;
+    max-height: var(--vv-height, 100svh) !important;
+  }
+
+  .cart-overlay {
+    top: var(--vv-top, 0px) !important;
+    bottom: auto !important;
+    height: var(--vv-height, 100svh) !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .cart-drawer {
+    position: fixed !important;
+    top: var(--vv-top, 0px) !important;
+    right: 0 !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: var(--vv-height, 100svh) !important;
+    max-height: var(--vv-height, 100svh) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .cart-overlay {
+    top: var(--vv-top, 0px) !important;
+    height: var(--vv-height, 100svh) !important;
+    bottom: auto !important;
+  }
+
+  .cart-drawer--vv-lock .cart-drawer__checkout-panel {
+    padding-bottom: 14px !important;
+  }
+
+  .cart-drawer--vv-lock .checkout-flow--verify,
+  .cart-drawer--vv-lock .checkout-flow--payment,
+  .cart-drawer--vv-lock .checkout-flow--shipping {
+    max-height: min(88%, 520px) !important;
+  }
+
+  .cart-drawer--vv-lock .checkout-flow--verify .checkout-sheet--pinned .checkout-cta,
+  .cart-drawer--vv-lock .checkout-flow--payment .checkout-sheet--pinned .checkout-cta,
+  .cart-drawer--vv-lock .checkout-flow--shipping .checkout-sheet--pinned .checkout-cta {
+    flex-shrink: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+.checkout-flow--vv-lock.checkout-flow--verify .checkout-sheet--pinned.is-active {
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  padding: 20px 20px 18px !important;
+}
+
+.checkout-flow--vv-lock .checkout-sheet--pinned .checkout-sheet__scroll {
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.checkout-flow--vv-lock .checkout-sheet--pinned .checkout-cta {
+  flex-shrink: 0 !important;
+  margin-top: 12px !important;
+  margin-bottom: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+html.safari-typing .checkout-flow--vv-lock {
+  transition: none !important;
+}
+
+.checkout-flow--payment .checkout-cta,
+.checkout-flow--shipping .checkout-cta,
+.checkout-flow--verify .checkout-cta {
+  touch-action: manipulation !important;
+  transform: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.checkout-flow--payment .checkout-cta:active,
+.checkout-flow--shipping .checkout-cta:active,
+.checkout-flow--verify .checkout-cta:active {
+  transform: none !important;
+}

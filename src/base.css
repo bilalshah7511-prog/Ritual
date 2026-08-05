@@ -1638,11 +1638,13 @@ ul, ol {
 
 @media (max-width: 500px) {
   .cart-drawer {
+    top: var(--vv-top, 0px);
+    bottom: auto;
+    height: var(--vv-height, 100svh);
+    max-height: var(--vv-height, 100svh);
     max-width: 100%;
     width: 100%;
-    height: auto;
-    max-height: none;
-  }
+}
 
   .cart-drawer__body {
     min-height: 0;
