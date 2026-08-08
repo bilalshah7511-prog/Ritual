@@ -95,7 +95,7 @@ export function useSafariDrawerLock(drawerRef, active) {
  * stretches them across the full viewport (Confirm Delivery UI bug).
  * Safari delivery typing is covered by useSafariDrawerLock instead.
  */
-const VV_LOCK_SHEETS = new Set(['verify', 'payment', 'shipping']);
+const VV_LOCK_SHEETS = new Set([]); // verify/payment/shipping stay in drawer
 
 /** Login/payment sheets: rise fully; freeze while typing so UI doesn't jump/zoom. */
 export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
@@ -108,13 +108,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     let saveTapUntil = 0;
 
     function clearSheetLock() {
-      if (sheet === 'delivery' || sheet === 'pdp' || sheet === 'total') {
-        pinDeliveryInDrawer(flow, backdrop);
-      } else {
-        // Login/payment/shipping: clear fixed full-bleed styles only.
-        // Keep natural fit-content sheet UI (shadow + slide) inside the drawer.
-        clearSheetViewportLock(flow, backdrop, drawer, { resetDrawerTransform: false });
-      }
+      pinDeliveryInDrawer(flow, backdrop);
       frozen = null;
       setTypingClass(false);
     }

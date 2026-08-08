@@ -1561,19 +1561,26 @@ html.safari-typing .checkout-flow--vv-lock {
   max-width: 100% !important;
 }
 
-/* Login/payment/shipping: drawer width only - keep original sheet UI */
+/* Login/payment/shipping: same width as cart drawer, never jump to viewport left */
 .cart-drawer .checkout-flow--verify,
 .cart-drawer .checkout-flow--verify.is-open,
+.cart-drawer .checkout-flow--verify.checkout-flow--vv-lock,
 .cart-drawer .checkout-flow--payment,
 .cart-drawer .checkout-flow--payment.is-open,
+.cart-drawer .checkout-flow--payment.checkout-flow--vv-lock,
 .cart-drawer .checkout-flow--shipping,
-.cart-drawer .checkout-flow--shipping.is-open {
+.cart-drawer .checkout-flow--shipping.is-open,
+.cart-drawer .checkout-flow--shipping.checkout-flow--vv-lock {
+  position: absolute !important;
   left: 0 !important;
   right: 0 !important;
-  width: auto !important;
+  bottom: 0 !important;
+  top: auto !important;
+  width: 100% !important;
   max-width: 100% !important;
   inset-inline: 0 !important;
   box-sizing: border-box !important;
+  z-index: 5 !important;
 }
 
 .cart-drawer .checkout-flow--verify.is-open,
@@ -1583,12 +1590,6 @@ html.safari-typing .checkout-flow--vv-lock {
   max-height: min(88%, 520px) !important;
   box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18) !important;
   overflow: hidden !important;
-}
-
-.cart-drawer .checkout-flow--verify.checkout-flow--vv-lock,
-.cart-drawer .checkout-flow--payment.checkout-flow--vv-lock,
-.cart-drawer .checkout-flow--shipping.checkout-flow--vv-lock {
-  max-width: 100% !important;
-  box-sizing: border-box !important;
+  transform: translateY(0) !important;
 }
 

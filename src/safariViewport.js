@@ -50,6 +50,9 @@ export function applySheetViewportLock(flow, backdrop, drawer, snap, options = {
   if (!flow) return;
   // Delivery must stay absolute inside the cart drawer (desktop multi-click bug)
   if (
+    flow.classList.contains('checkout-flow--verify') ||
+    flow.classList.contains('checkout-flow--payment') ||
+    flow.classList.contains('checkout-flow--shipping') ||
     flow.classList.contains('checkout-flow--delivery') ||
     flow.classList.contains('checkout-flow--pdp') ||
     flow.classList.contains('checkout-flow--total')
