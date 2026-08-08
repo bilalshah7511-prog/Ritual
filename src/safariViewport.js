@@ -135,7 +135,6 @@ export function clearSheetViewportLock(flow, backdrop, drawer, options = {}) {
 /** Force delivery/pdp sheet to stay inside the cart drawer (desktop-safe). */
 export function pinDeliveryInDrawer(flow, backdrop) {
   // Strip leftover vv-lock inline styles. Do NOT touch transform — .is-open needs translateY(0).
-  // needs translateY(0). fixed+width:100% is what stretches Confirm Delivery.
   if (flow) {
     flow.classList.remove('checkout-flow--vv-lock');
     [

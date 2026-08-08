@@ -108,8 +108,13 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     let saveTapUntil = 0;
 
     function clearSheetLock() {
-      // Always keep sheets inside the cart drawer width (login/payment/shipping/delivery).
-      pinDeliveryInDrawer(flow, backdrop);
+      if (sheet === 'delivery' || sheet === 'pdp' || sheet === 'total') {
+        pinDeliveryInDrawer(flow, backdrop);
+      } else {
+        // Login/payment/shipping: clear fixed full-bleed styles only.
+        // Keep natural fit-content sheet UI (shadow + slide) inside the drawer.
+        clearSheetViewportLock(flow, backdrop, drawer, { resetDrawerTransform: false });
+      }
       frozen = null;
       setTypingClass(false);
     }
