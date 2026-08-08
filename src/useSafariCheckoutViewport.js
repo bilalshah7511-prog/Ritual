@@ -129,7 +129,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       }
 
       const active = document.activeElement;
-      if (isCheckoutCta(active) && frozen) {
+      if (isCheckoutCta(active) && frozen && VV_LOCK_SHEETS.has(sheet)) {
         applySheetViewportLock(flow, backdrop, drawer, frozen);
         setTypingClass(false);
         return;
