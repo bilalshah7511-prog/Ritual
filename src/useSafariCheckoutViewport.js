@@ -182,11 +182,8 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
     function onPointerDownCapture(e) {
       if (isCheckoutCta(e.target)) {
-        // Delivery/pdp/total: clear any leftover fixed styles (desktop multi-click stretch)
-        if (!VV_LOCK_SHEETS.has(sheet)) {
-          clearSheetLock();
-          return;
-        }
+        // Non-vv sheets (delivery/login/etc): do nothing — clearSheetLock reflows input width
+        if (!VV_LOCK_SHEETS.has(sheet)) return;
         holdFreezeForSaveTap();
       }
     }
