@@ -328,10 +328,7 @@ export default function App() {
         hasFieldError = true;
       }
       if (hasFieldError) {
-        // Inline for name/state; overlay only when other fields are missing
-        if (name && state && (!addrCountry || !line1 || !city || !zip)) {
-          playSheetFeedback('error');
-        }
+        // Never show sheet overlay here — it stretches the delivery form width
         return;
       }
       const line2 = String(addrLine2 || '').trim();
