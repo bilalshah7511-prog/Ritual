@@ -69,6 +69,7 @@ export default function App() {
   const [deliveryMode, setDeliveryMode] = useState('pickup');
   const [addrFullName, setAddrFullName] = useState('');
   const [addrFullNameError, setAddrFullNameError] = useState('');
+  const [addrStateError, setAddrStateError] = useState('');
   const [addrCountry, setAddrCountry] = useState('');
   const [addrLine1, setAddrLine1] = useState('');
   const [addrLine2, setAddrLine2] = useState('');
@@ -232,7 +233,7 @@ export default function App() {
   }
 
   function playSheetFeedback(type) {
-    setSheetFeedback(type);
+    setSheetFeedback((prev) => (prev === type ? prev : type));
   }
 
   function markComplete(key) {
@@ -310,14 +311,27 @@ export default function App() {
       const city = String(addrCity || '').trim();
       const state = String(addrState || '').trim();
       const zip = String(addrZip || '').trim();
+      let hasFieldError = false;
       if (!name) {
         setAddrFullNameError('Please fill Full Name');
-        playSheetFeedback('error');
-        return;
+        hasFieldError = true;
+      } else {
+        setAddrFullNameError('');
       }
-      setAddrFullNameError('');
-      if (!addrCountry || !line1 || !city || !state || !zip) {
-        playSheetFeedback('error');
+      if (!state) {
+        setAddrStateError('Please fill State');
+        hasFieldError = true;
+      } else {
+        setAddrStateError('');
+      }
+      if (!addrCountry || !line1 || !city || !zip) {
+        hasFieldError = true;
+      }
+      if (hasFieldError) {
+        // Inline for name/state; overlay only when other fields are missing
+        if (name && state && (!addrCountry || !line1 || !city || !zip)) {
+          playSheetFeedback('error');
+        }
         return;
       }
       const line2 = String(addrLine2 || '').trim();
@@ -1140,8 +1154,8 @@ export default function App() {
                   <input type="text" className="checkout-input" placeholder="Enter city" value={addrCity} onChange={(e) => setAddrCity(e.target.value)} />
                   <div className="checkout-input-row">
                     <div>
-                      <label className="checkout-label">State</label>
-                      <select className="checkout-input checkout-select" value={addrState} onChange={(e) => setAddrState(e.target.value)}>
+                      <label className="checkout-label">State <span className="checkout-required" aria-hidden="true">*</span></label>
+                      <select className="checkout-input checkout-select" value={addrState} onChange={(e) => { setAddrState(e.target.value); if (addrStateError) setAddrStateError(''); }}>
                         <option value="" disabled>Select state</option>
                         {usStates.map((s) => (
                           <option key={s.code} value={s.code}>
@@ -1149,6 +1163,7 @@ export default function App() {
                           </option>
                         ))}
                       </select>
+                    {addrStateError ? <p className="checkout-field-error">{addrStateError}</p> : null}
                     </div>
                     <div>
                       <label className="checkout-label">Zip Code</label>

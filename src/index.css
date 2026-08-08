@@ -1479,3 +1479,38 @@ html.safari-typing .checkout-flow--vv-lock {
   font-weight: 600;
 }
 
+/* Keep delivery form width stable when error overlay / scrollbar appears */
+.checkout-flow {
+  isolation: isolate;
+}
+
+.sheet-feedback {
+  position: absolute !important;
+  inset: 0 !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  flex: none !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+.checkout-flow--delivery .checkout-sheet__scroll,
+.checkout-flow--delivery .checkout-sheet--pinned .checkout-sheet__scroll {
+  scrollbar-gutter: stable;
+  overflow-x: hidden !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.checkout-input-row {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.checkout-input-row > div {
+  min-width: 0;
+}
+
