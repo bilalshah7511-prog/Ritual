@@ -6,6 +6,7 @@ import {
   clearSheetViewportLock,
   isCompactViewport,
   isTypingInside,
+  pinDeliveryInDrawer,
   publishViewportCssVars,
   readVisualViewport,
 } from './safariViewport';
@@ -107,7 +108,11 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     let saveTapUntil = 0;
 
     function clearSheetLock() {
-      clearSheetViewportLock(flow, backdrop, drawer);
+      if (sheet === 'delivery' || sheet === 'pdp' || sheet === 'total') {
+        pinDeliveryInDrawer(flow, backdrop);
+      } else {
+        clearSheetViewportLock(flow, backdrop, drawer, { resetDrawerTransform: true });
+      }
       frozen = null;
       setTypingClass(false);
     }

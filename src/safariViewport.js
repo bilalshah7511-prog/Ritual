@@ -54,7 +54,7 @@ export function applySheetViewportLock(flow, backdrop, drawer, snap, options = {
     flow.classList.contains('checkout-flow--pdp') ||
     flow.classList.contains('checkout-flow--total')
   ) {
-    clearSheetViewportLock(flow, backdrop, drawer);
+    pinDeliveryInDrawer(flow, backdrop);
     return;
   }
   const { top, height, bottomGap } = snap;
@@ -105,7 +105,7 @@ export function applySheetViewportLock(flow, backdrop, drawer, snap, options = {
   }
 }
 
-export function clearSheetViewportLock(flow, backdrop, drawer) {
+export function clearSheetViewportLock(flow, backdrop, drawer, options = {}) {
   if (flow) {
     [
       'position',
@@ -125,8 +125,38 @@ export function clearSheetViewportLock(flow, backdrop, drawer) {
       (prop) => backdrop.style.removeProperty(prop),
     );
   }
-  if (drawer) {
+  // Never strip drawer transform while delivery is open — that lets fixed
+  // descendants escape to the viewport (full-width stretch on desktop).
+  if (drawer && options.resetDrawerTransform) {
     drawer.style.removeProperty('transform');
+  }
+}
+
+/** Force delivery/pdp sheet to stay inside the cart drawer (desktop-safe). */
+export function pinDeliveryInDrawer(flow, backdrop) {
+  // Strip ANY leftover vv-lock inline styles so CSS can keep the sheet
+  // absolute inside .cart-drawer. Setting fixed+width:100% (or leaving it)
+  // is what stretches Confirm Delivery across the desktop viewport.
+  if (flow) {
+    flow.classList.remove('checkout-flow--vv-lock');
+    [
+      'position',
+      'left',
+      'right',
+      'bottom',
+      'top',
+      'width',
+      'height',
+      'max-height',
+      'max-width',
+      'z-index',
+      'transform',
+    ].forEach((prop) => flow.style.removeProperty(prop));
+  }
+  if (backdrop) {
+    ['position', 'left', 'right', 'top', 'bottom', 'width', 'height', 'z-index', 'inset'].forEach(
+      (prop) => backdrop.style.removeProperty(prop),
+    );
   }
 }
 
