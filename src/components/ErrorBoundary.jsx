@@ -11,6 +11,9 @@ export default class ErrorBoundary extends Component {
     return { hasError: true };
   }
 
+
+
+  
   componentDidCatch() {
     // keep UI alive
   }
