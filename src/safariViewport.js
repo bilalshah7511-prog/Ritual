@@ -155,7 +155,7 @@ export function pinDeliveryInDrawer(flow, backdrop) {
     flow.style.setProperty('position', 'absolute', 'important');
     flow.style.setProperty('left', '0', 'important');
     flow.style.setProperty('right', '0', 'important');
-    flow.style.setProperty('width', 'auto', 'important');
+    flow.style.setProperty('width', '100%', 'important');
     flow.style.setProperty('max-width', '100%', 'important');
     flow.style.setProperty('bottom', '0', 'important');
     flow.style.setProperty('top', 'auto', 'important');
