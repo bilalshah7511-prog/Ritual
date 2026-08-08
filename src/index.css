@@ -1465,3 +1465,17 @@ html.safari-typing .checkout-flow--vv-lock {
 .checkout-flow--verify .checkout-cta:active {
   transform: none !important;
 }
+
+.checkout-required {
+  color: #c0392b;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.checkout-field-error {
+  margin: 4px 0 10px;
+  color: #c0392b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
