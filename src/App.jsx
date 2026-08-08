@@ -70,7 +70,6 @@ export default function App() {
   const [deliveryMode, setDeliveryMode] = useState('pickup');
   const [addrFullName, setAddrFullName] = useState('');
   const [addrFullNameError, setAddrFullNameError] = useState('');
-  const [addrStateError, setAddrStateError] = useState('');
   const [addrCountry, setAddrCountry] = useState('');
   const [addrLine1, setAddrLine1] = useState('');
   const [addrLine2, setAddrLine2] = useState('');
@@ -330,7 +329,6 @@ export default function App() {
         return;
       }
       setAddrFullNameError('');
-      setAddrStateError('');
       const line2 = String(addrLine2 || '').trim();
       const cityLine = [city, state].filter(Boolean).join(', ') + (zip ? ` ${zip}` : '');
       const addressText = [line1, line2, cityLine].filter(Boolean).join(', ');
@@ -1152,7 +1150,7 @@ export default function App() {
                   <div className="checkout-input-row">
                     <div>
                       <label className="checkout-label">State</label>
-                      <select className="checkout-input checkout-select" value={addrState} onChange={(e) => { setAddrState(e.target.value); if (addrStateError) setAddrStateError(''); }}>
+                      <select className="checkout-input checkout-select" value={addrState} onChange={(e) => { setAddrState(e.target.value); }}>
                         <option value="" disabled>Select state</option>
                         {usStates.map((s) => (
                           <option key={s.code} value={s.code}>
