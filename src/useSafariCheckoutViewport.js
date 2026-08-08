@@ -114,12 +114,8 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     }
 
     function holdFreezeForSaveTap() {
-      // Never lock delivery/pdp/total — keeps sheet inside cart drawer width
-      if (!VV_LOCK_SHEETS.has(sheet)) {
-        clearSheetLock();
-        return;
-      }
-      // Keep frozen geometry while Save is pressed (keyboard dismiss must not grow sheet)
+      // Only freeze sheets that use vv-lock. Delivery/login must not reflow on CTA press.
+      if (!VV_LOCK_SHEETS.has(sheet)) return;
       saveTapUntil = Date.now() + 600;
       if (!frozen) frozen = lastIdleSnap || readVisualViewport();
       if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
@@ -127,7 +123,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
     function lockSheet() {
       if (!sheet || !flow || !isCompactViewport() || !VV_LOCK_SHEETS.has(sheet)) {
-        clearSheetLock();
+        if (flow?.classList.contains('checkout-flow--vv-lock')) clearSheetLock();
         return;
       }
 

@@ -1620,8 +1620,7 @@ html.safari-typing .checkout-flow--vv-lock {
 }
 
 .checkout-flow--delivery .checkout-sheet__scroll {
-  scrollbar-gutter: stable;
-  overflow-y: auto !important;
+overflow-y: auto !important;
   overflow-x: hidden !important;
 }
 
@@ -1632,3 +1631,53 @@ html.safari-typing .checkout-flow--vv-lock {
   box-sizing: border-box;
 }
 
+/* INPUT_WIDTH_STABLE_V3: delivery inputs never shrink on Confirm (all devices) */
+.checkout-flow--delivery .checkout-sheet.is-active {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+.checkout-flow--delivery .checkout-sheet__scroll {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important; /* stable scrollport — no width jump when error appears */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.checkout-flow--delivery .checkout-sheet__scroll::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+.checkout-flow--delivery .delivery-panel,
+.checkout-flow--delivery .checkout-label,
+.checkout-flow--delivery .checkout-input,
+.checkout-flow--delivery select.checkout-input,
+.checkout-flow--delivery .checkout-select,
+.checkout-flow--delivery .checkout-input-row,
+.checkout-flow--delivery .toggle-pair,
+.checkout-flow--delivery .checkout-cta,
+.checkout-flow--delivery .checkout-field-error {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+.checkout-flow--delivery .checkout-input-row > div {
+  min-width: 0 !important;
+  flex: 1 1 0 !important;
+}
+.checkout-flow--delivery .checkout-field-error {
+  min-height: 18px;
+}
+
+
+.checkout-flow--delivery .checkout-field-error--slot.is-empty {
+  visibility: hidden;
+}

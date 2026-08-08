@@ -12,7 +12,6 @@ import {
   usStates,
 } from './data/product';
 import { useSafariDrawerLock, useSafariSheetLock } from './useSafariCheckoutViewport';
-import { pinDeliveryInDrawer } from './safariViewport';
 import './base.css';
 import './index.css';
 
@@ -177,16 +176,6 @@ export default function App() {
   useSafariDrawerLock(cartDrawerRef, cartOpen || checkoutLoading);
   useSafariSheetLock(checkoutFlowRef, checkoutBackdropRef, cartDrawerRef, sheet);
 
-  // Re-pin delivery sheet after validate/re-render so desktop width never escapes the drawer
-  useEffect(() => {
-    if (sheet !== 'delivery') return undefined;
-    pinDeliveryInDrawer(checkoutFlowRef.current, checkoutBackdropRef.current);
-    const id = window.requestAnimationFrame(() => {
-      pinDeliveryInDrawer(checkoutFlowRef.current, checkoutBackdropRef.current);
-    });
-    return () => window.cancelAnimationFrame(id);
-  }, [sheet, addrFullNameError]);
-
   useEffect(() => {
     if (!selectedDate && dates[0]) setSelectedDate(dates[0]);
   }, [dates, selectedDate]);
@@ -302,9 +291,7 @@ export default function App() {
   }
 
   function confirmDelivery() {
-    // NAME_ONLY_DELIVERY_V2
-    // Desktop: prevent delivery sheet stretching to full viewport on validate
-    pinDeliveryInDrawer(checkoutFlowRef.current, checkoutBackdropRef.current);
+    // NAME_ONLY_DELIVERY_V2 — do not reflow sheet width on validate
     if (deliveryMode === 'pickup') {
       if (!pickupChosen) {
         playSheetFeedback('error');
@@ -326,7 +313,6 @@ export default function App() {
       const zip = String(addrZip || '').trim();
       if (!name) {
         setAddrFullNameError('Please fill Full Name');
-        pinDeliveryInDrawer(checkoutFlowRef.current, checkoutBackdropRef.current);
         return;
       }
       setAddrFullNameError('');
@@ -1134,7 +1120,7 @@ export default function App() {
                 <div className="delivery-panel">
                   <label className="checkout-label">Full Name <span className="checkout-required checkout-name-required" aria-hidden="true">*</span></label>
                   <input type="text" className="checkout-input" placeholder="John Doe" value={addrFullName} onChange={(e) => { setAddrFullName(e.target.value); if (addrFullNameError) setAddrFullNameError(''); }} />
-                  {addrFullNameError ? <p className="checkout-field-error">{addrFullNameError}</p> : null}
+                  <p className={`checkout-field-error checkout-field-error--slot${!addrFullNameError ? ' is-empty' : ''}`}>{addrFullNameError || '\u00a0'}</p>
                   <label className="checkout-label">Country or region</label>
                   <select className="checkout-input checkout-select" value={addrCountry} onChange={(e) => setAddrCountry(e.target.value)}>
                     <option value="" disabled>Select country</option>
@@ -1171,7 +1157,6 @@ export default function App() {
             <button
               type="button"
               className="checkout-cta"
-              onPointerDown={() => pinDeliveryInDrawer(checkoutFlowRef.current, checkoutBackdropRef.current)}
               onClick={confirmDelivery}
             >
               {deliveryMode === 'pickup' ? 'Confirm Pickup' : 'Confirm Delivery'}

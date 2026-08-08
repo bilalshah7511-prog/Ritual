@@ -135,9 +135,8 @@ export function clearSheetViewportLock(flow, backdrop, drawer, options = {}) {
   }
 }
 
-/** Force delivery/pdp sheet to stay inside the cart drawer (desktop-safe). */
+/** Clear fixed/full-bleed vv-lock styles; leave width to CSS (stable inputs). */
 export function pinDeliveryInDrawer(flow, backdrop) {
-  // Strip leftover vv-lock inline styles. Do NOT touch transform — .is-open needs translateY(0).
   if (flow) {
     flow.classList.remove('checkout-flow--vv-lock');
     [
@@ -152,23 +151,11 @@ export function pinDeliveryInDrawer(flow, backdrop) {
       'max-width',
       'z-index',
     ].forEach((prop) => flow.style.removeProperty(prop));
-    flow.style.setProperty('position', 'absolute', 'important');
-    flow.style.setProperty('left', '0', 'important');
-    flow.style.setProperty('right', '0', 'important');
-    flow.style.setProperty('width', '100%', 'important');
-    flow.style.setProperty('max-width', '100%', 'important');
-    flow.style.setProperty('bottom', '0', 'important');
-    flow.style.setProperty('top', 'auto', 'important');
   }
   if (backdrop) {
     ['position', 'left', 'right', 'top', 'bottom', 'width', 'height', 'z-index', 'inset'].forEach(
       (prop) => backdrop.style.removeProperty(prop),
     );
-    backdrop.style.setProperty('position', 'absolute', 'important');
-    backdrop.style.setProperty('inset', '0', 'important');
-    backdrop.style.setProperty('width', 'auto', 'important');
-    backdrop.style.setProperty('height', 'auto', 'important');
-    backdrop.style.setProperty('max-width', '100%', 'important');
   }
 }
 
