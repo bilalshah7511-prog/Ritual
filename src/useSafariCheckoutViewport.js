@@ -108,6 +108,8 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     }
 
     function holdFreezeForSaveTap() {
+      // Only payment/shipping/verify — never delivery/pdp/total (fixed+100% stretches full viewport)
+      if (!VV_LOCK_SHEETS.has(sheet)) return;
       // Keep frozen geometry while Save is pressed (keyboard dismiss must not grow sheet)
       saveTapUntil = Date.now() + 600;
       if (!frozen) frozen = lastIdleSnap || readVisualViewport();
@@ -165,7 +167,9 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     function onFocusOut(e) {
       const next = e.relatedTarget;
       if (isCheckoutCta(next) || (next && flow?.contains(next))) {
-        if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen);
+        if (frozen && VV_LOCK_SHEETS.has(sheet)) {
+          applySheetViewportLock(flow, backdrop, drawer, frozen);
+        }
         return;
       }
       window.setTimeout(lockSheet, 220);
