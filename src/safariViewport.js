@@ -59,7 +59,7 @@ export function applySheetViewportLock(flow, backdrop, drawer, snap, options = {
   }
   const { top, height, bottomGap } = snap;
   const maxH = Math.round(Math.min(height * 0.88, 520));
-  const containToDrawer = Boolean(options.containToDrawer && drawer);
+  const containToDrawer = Boolean(drawer && options.containToDrawer !== false);
 
   if (drawer) {
     drawer.style.setProperty('transform', 'none', 'important');
@@ -134,7 +134,7 @@ export function clearSheetViewportLock(flow, backdrop, drawer, options = {}) {
 
 /** Force delivery/pdp sheet to stay inside the cart drawer (desktop-safe). */
 export function pinDeliveryInDrawer(flow, backdrop) {
-  // Strip leftover vv-lock inline styles. Do NOT touch transform � .is-open
+  // Strip leftover vv-lock inline styles. Do NOT touch transform — .is-open needs translateY(0).
   // needs translateY(0). fixed+width:100% is what stretches Confirm Delivery.
   if (flow) {
     flow.classList.remove('checkout-flow--vv-lock');

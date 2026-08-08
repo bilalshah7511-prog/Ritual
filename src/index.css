@@ -1560,3 +1560,26 @@ html.safari-typing .checkout-flow--vv-lock {
   height: auto !important;
   max-width: 100% !important;
 }
+
+/* Login/payment/shipping: never stretch full viewport — stay inside cart drawer */
+.cart-drawer .checkout-flow--verify,
+.cart-drawer .checkout-flow--verify.is-open,
+.cart-drawer .checkout-flow--verify.checkout-flow--vv-lock,
+.cart-drawer .checkout-flow--payment,
+.cart-drawer .checkout-flow--payment.is-open,
+.cart-drawer .checkout-flow--payment.checkout-flow--vv-lock,
+.cart-drawer .checkout-flow--shipping,
+.cart-drawer .checkout-flow--shipping.is-open,
+.cart-drawer .checkout-flow--shipping.checkout-flow--vv-lock {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  top: auto !important;
+  width: auto !important;
+  max-width: 100% !important;
+  inset-inline: 0 !important;
+  box-sizing: border-box !important;
+  z-index: 5 !important;
+}
+

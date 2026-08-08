@@ -108,11 +108,8 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     let saveTapUntil = 0;
 
     function clearSheetLock() {
-      if (sheet === 'delivery' || sheet === 'pdp' || sheet === 'total') {
-        pinDeliveryInDrawer(flow, backdrop);
-      } else {
-        clearSheetViewportLock(flow, backdrop, drawer, { resetDrawerTransform: true });
-      }
+      // Always keep sheets inside the cart drawer width (login/payment/shipping/delivery).
+      pinDeliveryInDrawer(flow, backdrop);
       frozen = null;
       setTypingClass(false);
     }
@@ -126,7 +123,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       // Keep frozen geometry while Save is pressed (keyboard dismiss must not grow sheet)
       saveTapUntil = Date.now() + 600;
       if (!frozen) frozen = lastIdleSnap || readVisualViewport();
-      if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen);
+      if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
     }
 
     function lockSheet() {
@@ -137,13 +134,13 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
       // After Save tap: keep frozen so sheet does not jump upward when keyboard closes
       if (Date.now() < saveTapUntil && frozen) {
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
         return;
       }
 
       const active = document.activeElement;
       if (isCheckoutCta(active) && frozen) {
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
         setTypingClass(false);
         return;
       }
@@ -152,14 +149,14 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       setTypingClass(typing);
 
       if (typing && frozen) {
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
         return;
       }
 
       const snap = readVisualViewport();
       if (typing) {
         if (!frozen) frozen = lastIdleSnap || snap;
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
         if (window.scrollY || window.scrollX) {
           window.scrollTo(0, 0);
         }
@@ -168,7 +165,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
       frozen = null;
       lastIdleSnap = snap;
-      applySheetViewportLock(flow, backdrop, drawer, snap);
+      applySheetViewportLock(flow, backdrop, drawer, snap, { containToDrawer: true });
       publishViewportCssVars(snap);
     }
 
@@ -181,7 +178,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       const next = e.relatedTarget;
       if (isCheckoutCta(next) || (next && flow?.contains(next))) {
         if (frozen && VV_LOCK_SHEETS.has(sheet)) {
-          applySheetViewportLock(flow, backdrop, drawer, frozen);
+          applySheetViewportLock(flow, backdrop, drawer, frozen, { containToDrawer: true });
         }
         return;
       }
