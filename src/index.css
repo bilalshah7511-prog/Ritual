@@ -1479,4 +1479,22 @@ html.safari-typing .checkout-flow--vv-lock {
   font-weight: 600;
 }
 
+/* Delivery must stay inside cart drawer — never inherit fixed full-viewport vv-lock */
+.checkout-flow--delivery,
+.checkout-flow--delivery.checkout-flow--vv-lock {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  max-width: 100% !important;
+  z-index: 5 !important;
+}
+
+.checkout-flow--delivery .checkout-sheet,
+.checkout-flow--delivery .checkout-sheet__scroll,
+.checkout-flow--delivery .checkout-input,
+.checkout-flow--delivery .checkout-cta {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
 
