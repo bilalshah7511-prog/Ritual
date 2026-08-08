@@ -1544,7 +1544,7 @@ html.safari-typing .checkout-flow--vv-lock {
   max-width: 100% !important;
   inset-inline: 0 !important;
   box-sizing: border-box !important;
-  /* keep translateY from .is-open � never fixed/full-viewport */
+  /* keep translateY from .is-open - never fixed/full-viewport */
 }
 .cart-drawer .checkout-flow--delivery .checkout-sheet,
 .cart-drawer .checkout-flow--delivery .checkout-cta,
@@ -1561,7 +1561,7 @@ html.safari-typing .checkout-flow--vv-lock {
   max-width: 100% !important;
 }
 
-/* Login/payment/shipping: drawer width only - keep original sheet UI
+/* Login/payment/shipping: drawer width only - keep original sheet UI */
 .cart-drawer .checkout-flow--verify,
 .cart-drawer .checkout-flow--verify.is-open,
 .cart-drawer .checkout-flow--payment,
@@ -1588,9 +1588,7 @@ html.safari-typing .checkout-flow--vv-lock {
 .cart-drawer .checkout-flow--verify.checkout-flow--vv-lock,
 .cart-drawer .checkout-flow--payment.checkout-flow--vv-lock,
 .cart-drawer .checkout-flow--shipping.checkout-flow--vv-lock {
-  /* Safari keyboard lock uses inline left/width from drawer rect (containToDrawer) */
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
-
 
