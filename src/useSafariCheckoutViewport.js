@@ -114,7 +114,10 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
     function holdFreezeForSaveTap() {
       // Never lock delivery/pdp/total — keeps sheet inside cart drawer width
-      if (!VV_LOCK_SHEETS.has(sheet)) return;
+      if (!VV_LOCK_SHEETS.has(sheet)) {
+        clearSheetLock();
+        return;
+      }
       // Keep frozen geometry while Save is pressed (keyboard dismiss must not grow sheet)
       saveTapUntil = Date.now() + 600;
       if (!frozen) frozen = lastIdleSnap || readVisualViewport();
@@ -182,6 +185,11 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
     function onPointerDownCapture(e) {
       if (isCheckoutCta(e.target)) {
+        // Delivery/pdp/total: clear any leftover fixed styles (desktop multi-click stretch)
+        if (!VV_LOCK_SHEETS.has(sheet)) {
+          clearSheetLock();
+          return;
+        }
         holdFreezeForSaveTap();
       }
     }

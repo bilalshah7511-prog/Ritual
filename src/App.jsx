@@ -12,6 +12,7 @@ import {
   usStates,
 } from './data/product';
 import { useSafariDrawerLock, useSafariSheetLock } from './useSafariCheckoutViewport';
+import { clearSheetViewportLock } from './safariViewport';
 import './base.css';
 import './index.css';
 
@@ -292,6 +293,12 @@ export default function App() {
   }
 
   function confirmDelivery() {
+    // Desktop: prevent delivery sheet stretching to full viewport on validate
+    clearSheetViewportLock(
+      checkoutFlowRef.current,
+      checkoutBackdropRef.current,
+      cartDrawerRef.current,
+    );
     if (deliveryMode === 'pickup') {
       if (!pickupChosen) {
         playSheetFeedback('error');
@@ -329,6 +336,11 @@ export default function App() {
       }
       if (hasFieldError) {
         // Never show sheet overlay here — it stretches the delivery form width
+        clearSheetViewportLock(
+          checkoutFlowRef.current,
+          checkoutBackdropRef.current,
+          cartDrawerRef.current,
+        );
         return;
       }
       const line2 = String(addrLine2 || '').trim();

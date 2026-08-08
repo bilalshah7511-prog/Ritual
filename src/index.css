@@ -1498,3 +1498,20 @@ html.safari-typing .checkout-flow--vv-lock {
   box-sizing: border-box !important;
 }
 
+/* Desktop/laptop: delivery sheet must never leave the cart drawer */
+@media (min-width: 501px) {
+  .cart-drawer .checkout-flow--delivery,
+  .cart-drawer .checkout-flow--delivery.is-open,
+  .cart-drawer .checkout-flow--delivery.checkout-flow--vv-lock {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    inset-inline: 0 !important;
+    transform: none !important;
+  }
+}
+

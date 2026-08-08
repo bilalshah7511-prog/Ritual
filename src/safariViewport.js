@@ -48,6 +48,15 @@ export function clearDrawerViewportLock(drawer) {
  */
 export function applySheetViewportLock(flow, backdrop, drawer, snap, options = {}) {
   if (!flow) return;
+  // Delivery must stay absolute inside the cart drawer (desktop multi-click bug)
+  if (
+    flow.classList.contains('checkout-flow--delivery') ||
+    flow.classList.contains('checkout-flow--pdp') ||
+    flow.classList.contains('checkout-flow--total')
+  ) {
+    clearSheetViewportLock(flow, backdrop, drawer);
+    return;
+  }
   const { top, height, bottomGap } = snap;
   const maxH = Math.round(Math.min(height * 0.88, 520));
   const containToDrawer = Boolean(options.containToDrawer && drawer);
