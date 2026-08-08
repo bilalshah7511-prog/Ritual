@@ -88,8 +88,10 @@ export function useSafariDrawerLock(drawerRef, active) {
   }, [drawerRef, active]);
 }
 
-/** Sheets that need Safari keyboard/viewport lock (NOT pdp / delivery / total). */
-const VV_LOCK_SHEETS = new Set(['verify', 'payment', 'shipping']);
+/** Sheets that need Safari keyboard/viewport lock (NOT pdp / total). */
+const VV_LOCK_SHEETS = new Set(['verify', 'payment', 'shipping', 'delivery']);
+/** Delivery stays drawer-width; payment/verify/shipping can use full viewport. */
+const DRAWER_CONTAINED_SHEETS = new Set(['delivery']);
 
 /** Login/payment sheets: rise fully; freeze while typing so UI doesn't jump/zoom. */
 export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
@@ -101,6 +103,14 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     let lastIdleSnap = null;
     let saveTapUntil = 0;
 
+    function lockOpts() {
+      return { containToDrawer: DRAWER_CONTAINED_SHEETS.has(sheet) };
+    }
+
+    function applyLock(snap) {
+      applySheetViewportLock(flow, backdrop, drawer, snap, lockOpts());
+    }
+
     function clearSheetLock() {
       clearSheetViewportLock(flow, backdrop, drawer);
       frozen = null;
@@ -108,12 +118,11 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
     }
 
     function holdFreezeForSaveTap() {
-      // Only payment/shipping/verify — never delivery/pdp/total (fixed+100% stretches full viewport)
       if (!VV_LOCK_SHEETS.has(sheet)) return;
       // Keep frozen geometry while Save is pressed (keyboard dismiss must not grow sheet)
       saveTapUntil = Date.now() + 600;
       if (!frozen) frozen = lastIdleSnap || readVisualViewport();
-      if (frozen) applySheetViewportLock(flow, backdrop, drawer, frozen);
+      if (frozen) applyLock(frozen);
     }
 
     function lockSheet() {
@@ -124,13 +133,13 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
       // After Save tap: keep frozen so sheet does not jump upward when keyboard closes
       if (Date.now() < saveTapUntil && frozen) {
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applyLock(frozen);
         return;
       }
 
       const active = document.activeElement;
-      if (isCheckoutCta(active) && frozen && VV_LOCK_SHEETS.has(sheet)) {
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+      if (isCheckoutCta(active) && frozen) {
+        applyLock(frozen);
         setTypingClass(false);
         return;
       }
@@ -139,14 +148,14 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       setTypingClass(typing);
 
       if (typing && frozen) {
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applyLock(frozen);
         return;
       }
 
       const snap = readVisualViewport();
       if (typing) {
         if (!frozen) frozen = lastIdleSnap || snap;
-        applySheetViewportLock(flow, backdrop, drawer, frozen);
+        applyLock(frozen);
         if (window.scrollY || window.scrollX) {
           window.scrollTo(0, 0);
         }
@@ -155,7 +164,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
 
       frozen = null;
       lastIdleSnap = snap;
-      applySheetViewportLock(flow, backdrop, drawer, snap);
+      applyLock(snap);
       publishViewportCssVars(snap);
     }
 
@@ -168,7 +177,7 @@ export function useSafariSheetLock(flowRef, backdropRef, drawerRef, sheet) {
       const next = e.relatedTarget;
       if (isCheckoutCta(next) || (next && flow?.contains(next))) {
         if (frozen && VV_LOCK_SHEETS.has(sheet)) {
-          applySheetViewportLock(flow, backdrop, drawer, frozen);
+          applyLock(frozen);
         }
         return;
       }

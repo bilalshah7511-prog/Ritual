@@ -40,19 +40,23 @@ export function clearDrawerViewportLock(drawer) {
   drawer.classList.remove('cart-drawer--vv-lock');
 }
 
-export function applySheetViewportLock(flow, backdrop, drawer, snap) {
+/**
+ * @param {object} snap visual viewport snapshot
+ * @param {{ containToDrawer?: boolean }} [options]
+ *   containToDrawer: keep sheet width/left aligned to cart drawer
+ *   (delivery) so Safari keyboard lock does not stretch full viewport.
+ */
+export function applySheetViewportLock(flow, backdrop, drawer, snap, options = {}) {
   if (!flow) return;
   const { top, height, bottomGap } = snap;
   const maxH = Math.round(Math.min(height * 0.88, 520));
+  const containToDrawer = Boolean(options.containToDrawer && drawer);
 
   if (drawer) {
     drawer.style.setProperty('transform', 'none', 'important');
   }
 
   flow.style.setProperty('position', 'fixed', 'important');
-  flow.style.setProperty('left', '0', 'important');
-  flow.style.setProperty('right', '0', 'important');
-  flow.style.setProperty('width', '100%', 'important');
   flow.style.setProperty('top', 'auto', 'important');
   flow.style.setProperty('bottom', `${bottomGap}px`, 'important');
   flow.style.setProperty('height', 'auto', 'important');
@@ -60,15 +64,35 @@ export function applySheetViewportLock(flow, backdrop, drawer, snap) {
   flow.style.setProperty('z-index', '500', 'important');
   flow.classList.add('checkout-flow--vv-lock');
 
+  if (containToDrawer) {
+    const rect = drawer.getBoundingClientRect();
+    const left = Math.round(rect.left);
+    const width = Math.round(rect.width);
+    flow.style.setProperty('left', `${left}px`, 'important');
+    flow.style.setProperty('right', 'auto', 'important');
+    flow.style.setProperty('width', `${width}px`, 'important');
+  } else {
+    flow.style.setProperty('left', '0', 'important');
+    flow.style.setProperty('right', '0', 'important');
+    flow.style.setProperty('width', '100%', 'important');
+  }
+
   if (backdrop) {
     backdrop.style.setProperty('position', 'fixed', 'important');
-    backdrop.style.setProperty('left', '0', 'important');
-    backdrop.style.setProperty('right', '0', 'important');
     backdrop.style.setProperty('top', `${top}px`, 'important');
     backdrop.style.setProperty('height', `${height}px`, 'important');
     backdrop.style.setProperty('bottom', 'auto', 'important');
-    backdrop.style.setProperty('width', '100%', 'important');
     backdrop.style.setProperty('z-index', '450', 'important');
+    if (containToDrawer) {
+      const rect = drawer.getBoundingClientRect();
+      backdrop.style.setProperty('left', `${Math.round(rect.left)}px`, 'important');
+      backdrop.style.setProperty('right', 'auto', 'important');
+      backdrop.style.setProperty('width', `${Math.round(rect.width)}px`, 'important');
+    } else {
+      backdrop.style.setProperty('left', '0', 'important');
+      backdrop.style.setProperty('right', '0', 'important');
+      backdrop.style.setProperty('width', '100%', 'important');
+    }
   }
 }
 
